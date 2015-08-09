@@ -1,0 +1,138 @@
+#TimeGauge {
+  font-size: 12px;
+  min-width: 250px;
+}
+#TimeGauge .nav {
+  margin-left: 5px;
+}
+#TimeGauge .nav-stacked {
+  flex-flow: column nowrap;
+}
+#TimeGauge .panel{
+  margin: 4px;
+}
+#TimeGauge .panel-container {
+  display: flex;
+  flex-flow: column;
+}
+#TimeGauge .panel-body {
+  /*padding: 8px;*/
+  width: 100%;
+}
+#TimeGauge .panel-container .ndock-panel,
+#TimeGauge .panel-container .kdock-panel,
+#TimeGauge .panel-container .mission-panel,
+#TimeGauge .panel-container .task-panel {
+  flex: none;
+  /*width: 49%;*/
+}
+#TimeGauge .panelItem {
+  padding: 4px;
+}
+#TimeGauge .task-panel.panel-body {
+  /*border: 1px solid orange;*/
+  display: flex;
+  flex-flow: column nowrap;
+}
+#TimeGauge .taskItem {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+#TimeGauge .taskItem .questName {
+  flex: 1;
+  padding-right: 10px;
+  margin-right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#TimeGauge .taskItem .questProgress {
+  min-width: 4em;
+  flex: none;
+}
+#TimeGauge .taskItem .catIndicator {
+  display: inline-block;
+  height: 1em;
+  width: 4px;
+  vertical-align: middle;
+  margin-right: 4px;
+  flex: none;
+}
+#TimeGauge .mission-panel.panel-body {
+  /*border: 1px solid orange;*/
+  display: flex;
+  flex-flow: column nowrap;
+}
+#TimeGauge .missionItem {
+  display: flex;
+  flex: 1;
+}
+#TimeGauge .missionItem .missionName{
+  flex: 1;
+  padding-right: 10px;
+  margin-right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#TimeGauge .missionItem .missionTimer {
+  flex: none;
+}
+#TimeGauge .ndock-panel .panel-body {
+  /*border: 1px solid skyblue;*/
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+#TimeGauge .ndockItem{
+  display: flex;
+  flex: 1;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: stretch;
+  /*margin: 3px;*/
+}
+#TimeGauge .ndockItem .ndockName{
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  text-align: center;
+}
+#TimeGauge .ndockItem .ndockTimer {
+  flex: none;
+  margin-top: 5px;
+  text-align: center;
+}
+#TimeGauge .kdock-panel .panel-body {
+  /*border: 1px solid orange;*/
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+#TimeGauge .kdockItem {
+  display: flex;
+  flex: 1;
+  /*margin: 3px;*/
+  flex-flow: column nowrap;
+  align-items: stretch;
+  justify-content: space-around;
+}
+#TimeGauge .kdockItem .kdockName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  text-align: center;
+}
+#TimeGauge .kdockItem .kdockTimer {
+  /*display: flex;*/
+  flex: 1;
+  margin-top: 5px;
+  /*margin: 3px;*/
+}
