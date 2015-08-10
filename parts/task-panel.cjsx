@@ -2,6 +2,8 @@
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 CSON = require 'cson'
 {join} = require 'path-extra'
+i18n = require 'i18n'
+{__, __n} = i18n
 
 # Local time -> Task Refresh time(GMT + 4)
 getCurrentDay = ->
@@ -43,19 +45,19 @@ getStyleByPercent = (percent) ->
 
 getStyleByProgress = (progress) ->
   switch progress
-    when '进行'
+    when __ 'In progress'
       return 'warning'
     when '50%'
       return 'primary'
     when '80%'
       return 'primary'
-    when '达成'
+    when __ 'Completed'
       return 'success'
     else
       return 'default'
 
 emptyTask =
-  name: '未接受'
+  name: __ 'Empty quest'
   id: 100000
   content: '...'
   progress: ''
@@ -147,9 +149,9 @@ TaskPanel = React.createClass
         for task in body.api_list
           continue if task is -1 || task.api_state < 2
           # Determine progress
-          progress = '进行'
+          progress = __ 'In progress'
           if task.api_state == 3
-            progress = '达成'
+            progress = __ 'Completed'
           else if task.api_progress_flag == 1
             progress = '50%'
           else if task.api_progress_flag == 2
@@ -322,7 +324,7 @@ TaskPanel = React.createClass
       for i in [0..5]
         if @state.tasks[i].tracking
           <div className="panelItem taskItem" key={i}>
-            <OverlayTrigger placement='right' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
               <div className="questName">
                 <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}
@@ -336,7 +338,7 @@ TaskPanel = React.createClass
           </div>
         else
           <div className="panelItem taskItem" key={i}>
-            <OverlayTrigger placement='right' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
+            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{@state.tasks[i].name}</strong><br />{@state.tasks[i].content}</Tooltip>}>
               <div className="questName">
                 <span className="catIndicator" style={backgroundColor:getCategory @state.tasks[i].category}></span>
                 {@state.tasks[i].name}

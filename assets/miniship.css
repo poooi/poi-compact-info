@@ -1,6 +1,5 @@
 #MiniShip{
-  font-size: 13px;
-  width: 50%;
+  font-size: 14px;
 }
 #MiniShip .btn-group {
   display: flex;
@@ -10,7 +9,6 @@
 }
 #MiniShip .btn-group .btn {
   flex: 1;
-  padding: 7px;
 }
 #MiniShip .hidden {
   display: none;
@@ -26,20 +24,20 @@
 #MiniShip .progress {
   margin-bottom: 5px;
 }
-#TimeGauge .shipMore {
+#MainView .shipMore {
   width: 8px;
   height: 8px;
 }
 
-#TimeGauge .recProgress {
+#MainView .recProgress {
   margin: 5px;
   display: block;
   flex: 1;
 }
-#TimeGauge .recProgress .progress-bar{
+#MainView .recProgress .progress-bar{
   margin: 0;
 }
-#TimeGauge .recProgress .progress-bar:last-child:before{
+#MainView .recProgress .progress-bar:last-child:before{
   background-color: rgba(0, 0, 0, 0.2);
 }
 #MiniShip .shipDetails {
@@ -73,7 +71,7 @@
 
 #MiniShip .shipDetails .shipItem .shipInfo {
   flex: none;
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   flex-flow: row nowrap;
   width: 100%;
@@ -83,16 +81,17 @@
   /*margin-left: 4px;
   margin-right: 4px;*/
 }
-#MiniShip .shipDetails .shipItem .shipInfo .shipLv {
-  flex: none;
+#MiniShip .shipDetails .shipItem .shipInfo .shipHp {
+  flex: 1.5;
+  padding-right: 5px;
   align-self: flex-start;
 }
 #MiniShip .shipDetails .shipItem .shipInfo .shipType {
   margin-left: 5px;
 }
 #MiniShip .shipDetails .shipItem .shipInfo .shipName {
-  flex: 1;
-  margin-left: 5px;
+  flex: 1.5;
+  padding-right: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -100,7 +99,8 @@
 #MiniShip .shipDetails .shipItem .shipCond {
   flex: none;
   align-self: flex-end;
-  margin-left: 5px;
+  margin-left: auto;
+  display: table;
   /*margin-right: 4px;*/
   /*margin-bottom: 5px;*/
   /*width: 32px;*/
@@ -112,37 +112,20 @@
   vertical-align: middle;
   margin-left: 4px;
 }
-/*#MiniShip .shipDetails .condBar {
-  margin-top: 3px;
-}
-#MiniShip .shipDetails .condText {
-  font-size: 60%;
-  margin-right: 4px;
-  flex: none;
-  line-height: 1;
-}
-#MiniShip .shipDetails .condProgress {
-  width: 100%;
-}
-#MiniShip .shipDetails .condProgress .progress-bar {
-
-}
-#MiniShip .shipDetails .condProgress .progress-bar:last-child:before {
-  content: attr(data-content);
-  background-color: #292929;
-}*/
-
-#MiniShip .shipItem .shipHp{
+#MiniShip .shipItem .shipLv{
   flex: 2;
   display: flex;
   flex-direction: row;
   /*margin: 0 4px;*/
 }
-#MiniShip .shipItem .shipHpText {
-  font-size: 60%;
+#MiniShip .shipItem .shipLvText {
+  flex: 1.5;
+  font-size: 70%;
   margin-right: 4px;
-  flex: none;
   line-height: 1;
+}
+#MiniShip .shipItem .HpBar {
+  flex: 2.3;
 }
 #MiniShip .hp-progress {
   /*border-radius: 0px;*/
@@ -153,7 +136,7 @@
   height: 6px;
 }
 #MiniShip .hp-progress .progress .progress-bar {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 0.9;
   /*color: #666;*/
 }
@@ -169,7 +152,7 @@
 }
 
 #MiniShip .shipDetails .shipItem .shipFB{
-  flex: 1;
+  flex: 0.4;
   display: flex;
   flex-direction: row;
   margin-left: 4px;
@@ -210,11 +193,36 @@
   margin-bottom: -5px;
   margin-left: -3px;
 }
-
-
 #MiniShip .alert {
   background-color: transparent;
   border-color: transparent;
   margin-top: 9px;
   text-align: center;
+}
+
+#MiniShip .slotitem-container {
+  position: relative;
+  vertical-align: bottom;
+  display: inline;
+}
+#MiniShip .slotitem-container .slotitem-onslot {
+  position: absolute;
+  font-size: 12px;
+  text-align: center;
+  left: -3px;
+  bottom: -3px;
+  border-radius: 9px;
+  width: 18px;
+  height: 18px;
+  padding-left: 2px;
+}
+#MiniShip .slotitem-container span.show {
+  display: inline !important;
+}
+#MiniShip .slotitem-container img {
+  width: 36px;
+  height: 36px;
+  margin-top: -5px;
+  margin-bottom: -5px;
+  margin-left: -5px;
 }

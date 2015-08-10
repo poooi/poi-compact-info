@@ -2,6 +2,8 @@
 {resolveTime, success, warn} = window
 {Panel, Table, OverlayTrigger, Tooltip, Label} = ReactBootstrap
 {join} = require 'path-extra'
+i18n = require 'i18n'
+{__, __n} = i18n
 
 getMaterialImage = (idx) ->
   return "#{ROOT}/assets/img/material/0#{idx}.png"
@@ -9,27 +11,27 @@ getMaterialImage = (idx) ->
 KdockPanel = React.createClass
   getInitialState: ->
     docks: [
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
       ,
-        name: '未使用'
+        name: __ 'Empty'
         material: []
         completeTime: -1
         countdown: -1
@@ -46,13 +48,13 @@ KdockPanel = React.createClass
           switch kdock.api_state
             when -1
               docks[id] =
-                name: '未解锁'
+                name: __ 'Locked'
                 material: []
                 countdown: -1
                 completeTime: -1
             when 0
               docks[id] =
-                name: '未使用'
+                name: __ 'Empty'
                 material: []
                 countdown: -1
                 completeTime: -1
@@ -96,7 +98,7 @@ KdockPanel = React.createClass
                 countdown: -1
             when 0
               docks[id] =
-                name: '未使用'
+                name: __ 'Empty'
                 material: []
                 completeTime: -1
                 countdown: -1
@@ -139,7 +141,7 @@ KdockPanel = React.createClass
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 1 && !notified[i]
-          notify "#{docks[i].name} 建造完成",
+          notify "#{docks[i].name} #{__ "built"}",
             type: 'construction'
             icon: join(ROOT, 'assets', 'img', 'operation', 'build.png')
           notified[i] = true
@@ -180,36 +182,36 @@ KdockPanel = React.createClass
           if @state.docks[i].countdown > 0
             if @state.docks[i].material[0] >= 1500 && @state.docks[i].material[1] >= 1500 && @state.docks[i].material[2] >= 2000 || @state.docks[i].material[3] >= 1000
               <div className="panelItem kdockItem">
-                <div className="kdockName">
+                <span className="kdockName">
                   {@state.docks[i].name}
-                </div>
+                </span>
                 <Label className="kdockTimer" bsStyle="danger">
                   {resolveTime @state.docks[i].countdown}
                 </Label>
               </div>
             else
               <div className="panelItem kdockItem">
-                <div className="kdockName">
+                <span className="kdockName">
                   {@state.docks[i].name}
-                </div>
+                </span>
                 <Label className="kdockTimer" bsStyle="info">
                   {resolveTime @state.docks[i].countdown}
                 </Label>
               </div>
           else if @state.docks[i].countdown is 0
             <div className="panelItem kdockItem">
-              <div className="kdockName">
+              <span className="kdockName">
                 {@state.docks[i].name}
-              </div>
+              </span>
               <Label className="kdockTimer" bsStyle="success">
                 {resolveTime @state.docks[i].countdown}
               </Label>
             </div>
           else
             <div className="panelItem kdockItem">
-              <div className="kdockName">
+              <span className="kdockName">
                 {@state.docks[i].name}
-              </div>
+              </span>
               <Label className="kdockTimer" bsStyle="default">
                 {resolveTime 0}
               </Label>

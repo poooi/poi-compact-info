@@ -1,20 +1,21 @@
 path = require 'path-extra'
+i18n = require 'i18n'
+{__, __n} = i18n
 {layout, ROOT, $, $$, React, ReactBootstrap} = window
-{TabbedArea, TabPane, Grid, Col, Row, Accordion, Panel, Nav, NavItem} = ReactBootstrap
-{MissionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip} = require './parts'
+{TabbedArea, TabPane, Grid, Col, Row, Accordion, Panel, Nav, NavItem, TabbedArea, TabPane} = ReactBootstrap
+{MissionPanel, NdockPanel, KdockPanel, TaskPanel, MiniShip, ResourcePanel, TeitokuPanel} = require './parts'
 module.exports =
-  name: 'TimeGauge'
-  priority: 100000
-  displayName: [<FontAwesome key={0} name='clock-o' />, ' 计时面板']
-  description: '计时面板，提供舰队各种信息倒计时'
+  name: 'MainView'
+  priority: 0
+  displayName: <span><FontAwesome key={0} name='home' />{__ " Overview"}</span>
+  description: '概览面板，提供基本的概览界面'
   reactClass: React.createClass
     getInitialState: ->
-      xs: if layout == 'horizonal' then 6 else 6
+      layout: window.layout
       key: 1
     handleChangeLayout: (e) ->
-      {layout} = e.detail
       @setState
-        xs: if layout == 'horizonal' then 6 else 6
+        layout: e.detail.layout
     handleSelect: (key) ->
       @setState {key}
       @forceUpdate()
@@ -26,32 +27,85 @@ module.exports =
       false
     render: ->
       <div>
-        <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'timegauge.css')} />
-        <div className="panel-container">
-          <div className="combinedPanels" style={display:"flex", alignItems:"center"}>
-            <Nav bsStyle='pills' stacked activeKey={@state.key} onSelect={@handleSelect}>
-              <NavItem key={0} eventKey={0} id="navItemKdock">建造</NavItem>
-              <NavItem key={1} eventKey={1} id="navItemNdock">入渠</NavItem>
-            </Nav>
-            <div className={"panel-col kdock-panel " + if @state.key == 0 then 'show' else 'hidden'} eventKey={0} key={0} style={flex: 1}>
-              <KdockPanel />
+        <link rel="stylesheet" href={path.join(path.relative(ROOT, __dirname), 'assets', 'main.css')} />
+
+      {
+        if @state.layout == 'horizonal' or window.doubleTabbed
+          <div className="panel-container" style={display:"flex", flexFlow:"column"}>
+            <div className="panel-col teitoku-panel">
+              <TeitokuPanel />
             </div>
-            <div className={"panel-col ndock-panel " + if @state.key == 1 then 'show' else 'hidden'} eventKey={1} key={1} style={flex: 1}>
-              <NdockPanel />
+            <div style={display:"flex", flexFlow:"row"}>
+              <div style={display:"flex", flexFlow:"column nowrap",width:"50%"}>
+                <div className="panel-col resource-panel" ref="resourcePanel" >
+                  <ResourcePanel />
+                </div>
+                <div className="miniship" id={MiniShip.name} ref="miniship">
+                  {React.createElement MiniShip.reactClass}
+                </div>
+              </div>
+              <div style={display:"flex", flexFlow:"column nowrap", width:"50%"}>
+                <div className="combinedPanels" style={display:"flex", flexFlow:"column nowrap"}>
+                  <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
+                   <TabPane eventKey={1} tab={__ 'Docking'}>
+                     <div className={"panel-col ndock-panel "}style={flex: 1}>
+                       <NdockPanel />
+                     </div>
+                   </TabPane>
+                   <TabPane eventKey={2} tab={__ "Construction"}>
+                     <div className={"panel-col kdock-panel "}style={flex: 1}>
+                       <KdockPanel />
+                     </div>
+                   </TabPane>
+                  </TabbedArea>
+                </div>
+                <div className="panel-col mission-panel" ref="missionPanel" >
+                  <MissionPanel />
+                </div>
+                <div className="panel-col task-panel" ref="taskPanel" >
+                  <TaskPanel />
+                </div>
+              </div>
             </div>
           </div>
-          <div style={display:"flex", flexFlow:"row"}>
-            <div style={display:"flex", flexFlow:"column nowrap", width:"50%"}>
-              <div className="panel-col mission-panel" ref="missionPanel" >
-                <MissionPanel />
+        else
+          <div className="panel-container" style={display:"flex", flexFlow:"row"}>
+            <div style={display:"flex", flexFlow:"column", width:"60%"}>
+              <div className="panel-col teitoku-panel">
+                <TeitokuPanel />
               </div>
-              <div className="panel-col task-panel" ref="taskPanel" >
-                <TaskPanel />
+              <div style={display:"flex", flexFlow:"row"}>
+                <div style={display:"flex", flexFlow:"column nowrap",width:"50%"}>
+                  <div className="panel-col resource-panel" ref="resourcePanel" >
+                    <ResourcePanel />
+                  </div>
+                  <div className="panel-col task-panel" ref="taskPanel" >
+                    <TaskPanel />
+                  </div>
+                </div>
+                <div style={display:"flex", flexFlow:"column nowrap", width:"50%"}>
+                  <div className="combinedPanels" style={display:"flex", flexFlow:"column nowrap"}>
+                    <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
+                     <TabPane eventKey={1} tab={__ 'Docking'}>
+                       <div className={"panel-col ndock-panel "}style={flex: 1}>
+                         <NdockPanel />
+                       </div>
+                     </TabPane>
+                     <TabPane eventKey={2} tab={__ "Construction"}>
+                       <div className={"panel-col kdock-panel "}style={flex: 1}>
+                         <KdockPanel />
+                       </div>
+                     </TabPane>
+                    </TabbedArea>
+                  </div>
+                  <div className="panel-col mission-panel" ref="missionPanel" >
+                    <MissionPanel />
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="panel-col miniship" id={MiniShip.name} ref="miniship" >
+            <div className="miniship" id={MiniShip.name} ref="miniship" style={display:"flex", flexFlow:"column", width:"40%"}>
               {React.createElement MiniShip.reactClass}
             </div>
-          </div>
-        </div>
+          </div>}
       </div>

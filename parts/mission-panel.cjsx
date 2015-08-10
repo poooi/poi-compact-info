@@ -1,8 +1,15 @@
 {ROOT, layout, _, $, $$, React, ReactBootstrap} = window
-{Panel, Table, Label} = ReactBootstrap
+{Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 {resolveTime} = window
 {notify} = window
 {join} = require 'path-extra'
+i18n = require 'i18n'
+{__, __n} = i18n
+
+timeToString = (dateTime) ->
+  date = new Date(dateTime)
+  "#{date.getHours()}:#{date.getMinutes()}:#{date.getSeconds()}"
+
 
 MissionPanel = React.createClass
   getInitialState: ->
@@ -86,7 +93,7 @@ MissionPanel = React.createClass
       if decks[i].countdown > 0
         decks[i].countdown = Math.max(0, Math.floor((decks[i].completeTime - new Date()) / 1000))
         if decks[i].countdown <= 60 && !notified[i]
-          notify "#{decks[i].name} 远征归来",
+          notify "#{decks[i].name} #{__ "mission complete"}",
             type: 'expedition'
             icon: join(ROOT, 'assets', 'img', 'operation', 'expedition.png')
           notified[i] = true
@@ -109,12 +116,14 @@ MissionPanel = React.createClass
             if @state.decks[i].mission?
               "#{@state.decks[i].mission}"
             else
-              "未出发"
+              __ "Ready"
           }
           </span>
         {
           if @state.decks[i].countdown > 60
-            <Label className="missionTimer" bsStyle="info">{resolveTime @state.decks[i].countdown}</Label>
+            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{__ "Return by : "}</strong>{timeToString @state.decks[i].completeTime}</Tooltip>}>
+              <Label bsStyle="primary">{resolveTime @state.decks[i].countdown}</Label>
+            </OverlayTrigger>
           else if @state.decks[i].countdown > -1
             <Label className="missionTimer" bsStyle="success" >{resolveTime @state.decks[i].countdown}</Label>
           else
