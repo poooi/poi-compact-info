@@ -52,7 +52,7 @@ getHpStyle = (percent) ->
   else if percent <= 50
     'warning'
   else if percent <= 75
-    'primary'
+    'info'
   else
     'success'
 
@@ -60,7 +60,7 @@ getMaterialStyle = (percent) ->
   if percent <= 50
     'danger'
   else if percent <= 75
-    'warning'
+    'info'
   else if percent < 100
     'primary'
   else
@@ -140,9 +140,9 @@ getDeckMessage = (deck) ->
 
 getBackgroundStyle = ->
   if window.isDarkTheme
-    {backgroundColor: 'rgba(33, 33, 33, 0.7)', textAlign: 'center'}
+    {backgroundColor: 'rgba(33, 33, 33, 0.7)', textAlign: 'center', position: 'relative'}
   else
-    {backgroundColor: 'rgba(256, 256, 256, 0.7)', textAlign: 'center'}
+    {backgroundColor: 'rgba(256, 256, 256, 0.7)', textAlign: 'center', position: 'relative'}
 
 Slotitems = React.createClass
   render: ->
@@ -288,8 +288,26 @@ PaneBody = React.createClass
             <div className="shipTile">
               <OverlayTrigger placement="top" overlay={
                 <Popover>
-                  <div>
-                    <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
+                  <div style={display:"flex", flexFlow:"column"}>
+                    <div>
+                      <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
+                    </div>
+                    <div style={display:"flex", flexFlow:"row", marginTop: '20px'}>
+                      <img src="file://#{ROOT}/assets/img/material/01.png" className="material-icon" style={marginRight:'auto'} />
+                      <span style={marginLeft:'auto'}>{ship.api_fuel} / {shipInfo.api_fuel_max}</span>
+                    </div>
+                    <div>
+                      <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
+                                   now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
+                    </div>
+                    <div style={display:"flex", flexFlow:"row"}>
+                      <img src="file://#{ROOT}/assets/img/material/02.png" className="material-icon" style={marginRight:'auto'} />
+                      <span style={marginLeft:'auto'}>{ship.api_bull} / {shipInfo.api_bull_max}</span>
+                    </div>
+                    <div>
+                      <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
+                                   now={ship.api_bull / shipInfo.api_bull_max * 100} />
+                    </div>
                   </div>
                 </Popover>
               }>
