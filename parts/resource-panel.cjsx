@@ -8,8 +8,12 @@ order = [1, 3, 2, 4, 5, 7, 6, 8]
 
 getMaterialImage = (idx) ->
   return "file://#{ROOT}/assets/img/material/0#{idx}.png"
+getMargin = (i) ->
+  if i!=1 && i!=3
+    return {marginTop: '4px'}
 
 ResourcePanel = React.createClass
+
   getInitialState: ->
     material: ['??', '??', '??', '??', '??', '??', '??', '??', '??']
   handleResponse: (e) ->
@@ -82,10 +86,10 @@ ResourcePanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
   render: ->
     <Panel bsStyle="default">
-      <Grid style={marginTop: 5}>
+      <Grid>
       {
         for i in order
-          <Col key={i} xs={6}>
+          <Col key={i} xs={6} style={getMargin i}>
             <img src={getMaterialImage i} className="material-icon" />
             <span className="material-value">{@state.material[i]}</span>
           </Col>

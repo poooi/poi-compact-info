@@ -127,6 +127,11 @@
   flex: none;
   /*margin: 3px;*/
 }
+#MainView .resource-panel .panel-body {
+  /*border: 1px solid orange;*/
+  padding-top: 4px;
+  padding-bottom: 3px;
+}
 #MainView .label {
   font-size: 90%;
   font-weight: normal;

@@ -140,24 +140,28 @@ getDeckMessage = (deck) ->
 
 getBackgroundStyle = ->
   if window.isDarkTheme
-    {backgroundColor: 'rgba(33, 33, 33, 0.7)', textAlign: 'center', position: 'relative'}
+    {backgroundColor: 'rgba(33, 33, 33, 0.7)'}
   else
-    {backgroundColor: 'rgba(256, 256, 256, 0.7)', textAlign: 'center', position: 'relative'}
+    {backgroundColor: 'rgba(256, 256, 256, 0.7)'}
 
 Slotitems = React.createClass
   render: ->
-    <div className="slotitems" style={display:"flex", flexFlow:"row"}>
+    <div className="slotitems" style={display:"flex", flexFlow:"column"}>
     {
       {$slotitems, _slotitems} = window
       for itemId, i in @props.data
         continue if itemId == -1
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container">
-          <img key={itemId} src={join(relative(ROOT, __dirname), '..', '..',  '..',  '..', 'assets', 'img', 'slotitem', "#{item.api_type[3] + 33}.png")} />
-          <span className="slotitem-onslot
+          <img key={itemId} src={join(relative(ROOT, __dirname), '..', '..',  '..',  '..', 'assets', 'img', 'slotitem', "#{item.api_type[3] + 33}.png")} style={width: '32px', height: '32px'}} />
+          <span>
+            {item.api_name}
+            {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
+          </span>
+          <span className="slotitem-onslot label label-default
                           #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}
                           #{if @props.onslot[i] < @props.maxeq[i] then 'text-warning' else ''}"
-                          style={getBackgroundStyle()}>
+                          style={getBackdropStyle()}>
             {@props.onslot[i]}
           </span>
         </div>
@@ -289,24 +293,34 @@ PaneBody = React.createClass
               <OverlayTrigger placement="top" overlay={
                 <Popover>
                   <div style={display:"flex", flexFlow:"column"}>
-                    <div>
+                    <div style={marginBottom: '5px', width: '200px'}>
                       <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
                     </div>
-                    <div style={display:"flex", flexFlow:"row", marginTop: '20px'}>
-                      <img src="file://#{ROOT}/assets/img/material/01.png" className="material-icon" style={marginRight:'auto'} />
-                      <span style={marginLeft:'auto'}>{ship.api_fuel} / {shipInfo.api_fuel_max}</span>
-                    </div>
-                    <div>
-                      <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
-                                   now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
-                    </div>
                     <div style={display:"flex", flexFlow:"row"}>
-                      <img src="file://#{ROOT}/assets/img/material/02.png" className="material-icon" style={marginRight:'auto'} />
-                      <span style={marginLeft:'auto'}>{ship.api_bull} / {shipInfo.api_bull_max}</span>
-                    </div>
-                    <div>
-                      <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
-                                   now={ship.api_bull / shipInfo.api_bull_max * 100} />
+                      <div style={flex: 1, display:"flex", flexFlow:"column"}>
+                        <div style={display:"flex", flexFlow:"row", marginTop: '5px'}>
+                          <img src="file://#{ROOT}/assets/img/material/01.png" className="material-icon" style={marginRight:'auto'} />
+                          <span style={marginLeft:'auto'}>{ship.api_fuel} / {shipInfo.api_fuel_max}</span>
+                        </div>
+                        <div>
+                          <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
+                                       style={marginTop: '5px', height: '9px'}
+                                       now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
+                        </div>
+                      </div>
+                      <div style={width: '10px'} />
+                      <div style={flex: 1, display:"flex", flexFlow:"column"}>
+                        <div style={display:"flex", flexFlow:"row", marginTop: '5px'}>
+                          <img src="file://#{ROOT}/assets/img/material/02.png" className="material-icon" style={marginRight:'auto'} />
+                          <span style={marginLeft:'auto'}>{ship.api_bull} / {shipInfo.api_bull_max}</span>
+                        </div>
+                        <div>
+                          <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
+                                       style={marginTop: '5px'}
+                                       style={marginTop: '5px', height: '9px'}
+                                       now={ship.api_bull / shipInfo.api_bull_max * 100} />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </Popover>
