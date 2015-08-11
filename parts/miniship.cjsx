@@ -144,10 +144,14 @@ Slotitems = React.createClass
         continue if itemId == -1
         item = _slotitems[itemId]
         <div key={i} className="slotitem-container" style={display:"flex", flexFlow:"row", marginTop: '4px'}>
-          <img key={itemId} src={join(relative(ROOT, __dirname), '..', '..',  '..',  '..', 'assets', 'img', 'slotitem', "#{item.api_type[3] + 33}.png")} style={width: '32px', height: '32px',  marginTop: '-8px', marginBottom: '-8px'}} />
+          <img key={itemId} src={join(relative(ROOT, __dirname), '..', '..',  '..',  '..', 'assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} style={width: '32px', height: '32px',  marginTop: '-8px', marginBottom: '-8px'}} />
           <span>
             {item.api_name}
             {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
+            {if item.api_alv? and item.api_alv >=1 and item.api_alv <= 3 then <strong style={color: '#3EAEFF'}>★+{item.api_alv}</strong> else ''}
+            {if item.api_alv? and item.api_alv >= 4 and item.api_alv <= 6 then <strong style={color: '#F9C62F'}>★+{item.api_alv}</strong> else ''}
+            {if item.api_alv? and item.api_alv >= 7 and item.api_alv <= 9  then <strong style={color: '#F9C62F'}>★+{item.api_alv}</strong> else ''}
+            {if item.api_alv? and item.api_alv >= 9 then <strong style={color: '#F94D2F'}>★</strong> else ''}
           </span>
           <Label className="slotitem-onslot
                           #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}"
