@@ -105,10 +105,7 @@ getFontStyle = (theme)  ->
   if window.isDarkTheme then color: '#FFF' else color: '#000'
 
 getBackdropStyle = ->
-  if window.isDarkTheme
-    backgroundColor: 'rgba(33, 33, 33, 0.7)'
-  else
-    backgroundColor: 'rgba(256, 256, 256, 0.7)'
+  return {fontSize: '90%', fontWeight: 'normal', padding: '3px 6px 3px 5px', marginLeft: '2px'}
 
 getTyku = (deck) ->
   {$ships, $slotitems, _ships, _slotitems} = window
@@ -138,12 +135,6 @@ getDeckMessage = (deck) ->
   avgLv: parseFloat(avgLv.toFixed(0))
   tyku: getTyku(deck)
 
-getBackgroundStyle = ->
-  if window.isDarkTheme
-    {backgroundColor: 'rgba(33, 33, 33, 0.7)'}
-  else
-    {backgroundColor: 'rgba(256, 256, 256, 0.7)'}
-
 Slotitems = React.createClass
   render: ->
     <div className="slotitems" style={display:"flex", flexFlow:"column"}>
@@ -152,18 +143,18 @@ Slotitems = React.createClass
       for itemId, i in @props.data
         continue if itemId == -1
         item = _slotitems[itemId]
-        <div key={i} className="slotitem-container">
-          <img key={itemId} src={join(relative(ROOT, __dirname), '..', '..',  '..',  '..', 'assets', 'img', 'slotitem', "#{item.api_type[3] + 33}.png")} style={width: '32px', height: '32px'}} />
+        <div key={i} className="slotitem-container" style={display:"flex", flexFlow:"row", marginTop: '4px'}>
+          <img key={itemId} src={join(relative(ROOT, __dirname), '..', '..',  '..',  '..', 'assets', 'img', 'slotitem', "#{item.api_type[3] + 33}.png")} style={width: '32px', height: '32px',  marginTop: '-8px', marginBottom: '-8px'}} />
           <span>
             {item.api_name}
             {if item.api_level > 0 then <strong style={color: '#45A9A5'}>★+{item.api_level}</strong> else ''}
           </span>
-          <span className="slotitem-onslot label label-default
-                          #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}
-                          #{if @props.onslot[i] < @props.maxeq[i] then 'text-warning' else ''}"
+          <Label className="slotitem-onslot
+                          #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}"
+                          bsStyle="#{if @props.onslot[i] < @props.maxeq[i] then 'warning' else 'default'}"
                           style={getBackdropStyle()}>
             {@props.onslot[i]}
-          </span>
+          </Label>
         </div>
     }
     </div>
@@ -346,7 +337,7 @@ PaneBody = React.createClass
                       <span className="shipLvText">
                         Lv. {ship.api_lv} ({ship.api_exp[1]})
                       </span>
-                      <span className="HpBar">
+                      <span className="hp-progress">
                         <ProgressBar style={flex: "auto"} bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100} now={ship.api_nowhp / ship.api_maxhp * 100} />
                       </span>
                     </div>

@@ -36,6 +36,7 @@
 }
 #MainView .recProgress .progress-bar{
   margin: 0;
+  height: 10px;
 }
 #MainView .recProgress .progress-bar:last-child:before{
   background-color: rgba(0, 0, 0, 0.2);
@@ -124,29 +125,11 @@
   margin-right: 4px;
   line-height: 1;
 }
-#MiniShip .shipItem .HpBar {
+#MiniShip .shipItem .hp-progress {
   flex: 2.3;
 }
-#MiniShip .hp-progress {
-  /*border-radius: 0px;*/
-  background-color: inherit;
-  vertical-align: bottom;
-}
-#MiniShip .hp-progress .progress {
-  height: 6px;
-}
-#MiniShip .hp-progress .progress .progress-bar {
-  font-size: 12px;
-  line-height: 0.9;
-  /*color: #666;*/
-}
-#MiniShip .hp-progress .progress {
-  position: relative;
-}
-#MiniShip .hp-progress .progress-bar span span {
-  position: absolute;
-  width: 100%;
-  display: block;
+#MiniShip .shipItem .hp-progress .progress{
+  height: 7px;
 }
 #MiniShip .shipDetails .shipItem .progress .progress-condition{
 }
@@ -176,9 +159,10 @@
 }
 #MiniShip .slotitem-container .slotitem-onslot {
   position: absolute;
-  font-size: 9px;
-  left: -1px;
-  top: -9px;
+  font-size: 18px;
+  text-align: center;
+  /*left: -1px;
+  top: -9px;*/
 }
 #MiniShip .slotitem-container span.slotitem-onslot.label{
   padding: 2px 2px;
@@ -198,31 +182,4 @@
   border-color: transparent;
   margin-top: 9px;
   text-align: center;
-}
-
-#MiniShip .slotitem-container {
-  position: relative;
-  vertical-align: bottom;
-  display: inline;
-}
-#MiniShip .slotitem-container .slotitem-onslot {
-  position: absolute;
-  font-size: 12px;
-  text-align: center;
-  left: -3px;
-  bottom: -3px;
-  border-radius: 9px;
-  width: 18px;
-  height: 18px;
-  padding-left: 2px;
-}
-#MiniShip .slotitem-container span.show {
-  display: inline !important;
-}
-#MiniShip .slotitem-container img {
-  width: 36px;
-  height: 36px;
-  margin-top: -5px;
-  margin-bottom: -5px;
-  margin-left: -5px;
 }
