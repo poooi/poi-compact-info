@@ -160,6 +160,7 @@ Slotitems = React.createClass
                 else if item.api_alv? and item.api_alv >= 9
                   <strong key={j} style={color: '#F94D2F'}>★</strong>
                 else ''
+              }
           </span>
           <Label className="slotitem-onslot
                           #{if (item.api_type[3] >= 6 && item.api_type[3] <= 10) || (item.api_type[3] >= 21 && item.api_type[3] <= 22) || item.api_type[3] == 33 then 'show' else 'hide'}"
