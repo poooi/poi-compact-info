@@ -170,17 +170,6 @@ Slotitems = React.createClass
           </Label>
         </div>
     }
-    {
-      {$slotitems, _slotitems} = window
-      if @props.dataex
-        item = _slotitems[@props.dataex]
-        <div className="slotitem-container">
-          <img key={itemId} src={join(relative(ROOT, __dirname), '..', '..',  '..',  '..', 'assets', 'img', 'slotitem', "#{item.api_type[3] + 100}.png")} style={width: '32px', height: '32px',  marginTop: '-8px', marginBottom: '-8px'}} />
-          <span>
-            {item.api_name}
-          </span>
-        </div>
-    }
     </div>
 
 TopAlert = React.createClass
@@ -309,7 +298,7 @@ PaneBody = React.createClass
                 <Popover>
                   <div style={display:"flex", flexFlow:"column"}>
                     <div style={marginBottom: '5px', width: '200px'}>
-                      <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} dataex={ship.api_slot_ex} />
+                      <Slotitems data={ship.api_slot.concat(ship.api_slot_ex || -1)} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
                     </div>
                     <div style={display:"flex", flexFlow:"row"}>
                       <div style={flex: 1, display:"flex", flexFlow:"column"}>
