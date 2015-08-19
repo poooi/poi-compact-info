@@ -1,17 +1,27 @@
 {ROOT, APPDATA_PATH, layout, _, $, $$, React, ReactBootstrap} = window
 {Panel, Table, Label, OverlayTrigger, Tooltip} = ReactBootstrap
 CSON = require 'cson'
+fs = require 'fs-extra'
 {join} = require 'path-extra'
 i18n = require 'i18n'
 {__, __n} = i18n
 
-# Local time -> Task Refresh time(GMT + 4)
-getCurrentDay = ->
-  curTime = new Date()
-  curTime.setTime(curTime.getTime() + (curTime.getTimezoneOffset() + 240) * 60000)
-  curTime.getDay()
+zero = 331200000
+isDifferentDay = (time1, time2) ->
+  day1 = (time1 - zero) // 86400000
+  day2 = (time2 - zero) // 86400000
+  day1 != day2
+isDifferentWeek = (time1, time2) ->
+  week1 = (time1 - zero) // 604800000
+  week2 = (time2 - zero) // 604800000
+  week1 != week2
+isDifferentMonth = (time1, time2) ->
+  # UTC time to UTC+4
+  date1 = new Date(time1 + 14400000)
+  date2 = new Date(time2 + 14400000)
+  date1.getUTCMonth() != date2.getUTCMonth() || date1.getUTCFullYear() != date2.getUTCFullYear()
 
-prevDay = getCurrentDay()
+prevTime = (new Date()).getTime()
 
 getCategory = (api_category) ->
   switch api_category
@@ -34,30 +44,30 @@ getCategory = (api_category) ->
     else
       return '#fff'
 
+getStyleByProgress = (progress) ->
+  switch progress
+    when '进行'
+      return 'warning'
+    when '50%'
+      return 'primary'
+    when '80%'
+      return 'info'
+    when '达成'
+      return 'success'
+    else
+      return 'default'
+
 getStyleByPercent = (percent) ->
   if percent < 0.5
     return 'warning'
   if percent < 0.8
     return 'primary'
   if percent < 1
-    return 'primary'
+    return 'info'
   return 'success'
 
-getStyleByProgress = (progress) ->
-  switch progress
-    when __ 'In progress'
-      return 'warning'
-    when '50%'
-      return 'primary'
-    when '80%'
-      return 'primary'
-    when __ 'Completed'
-      return 'success'
-    else
-      return 'default'
-
 emptyTask =
-  name: __ 'Empty quest'
+  name: '未接受'
   id: 100000
   content: '...'
   progress: ''
@@ -66,33 +76,50 @@ emptyTask =
 
 memberId = -1
 # Quest Tracking
+questGoals = {}
 try
   questGoals = CSON.parseCSONFile join(ROOT, 'assets', 'data', 'quest_goal.cson')
 catch
   console.log 'No quest tracking data!'
 questRecord = {}
 syncQuestRecord = ->
-  questRecord.day = getCurrentDay()
-  localStorage.setItem "quest_tracking_#{memberId}", JSON.stringify(questRecord)
+  questRecord.time = (new Date()).getTime()
+  fs.writeFileSync join(APPDATA_PATH, "quest_tracking_#{memberId}.cson"), CSON.stringify questRecord, null, 2
 clearQuestRecord = (id) ->
   delete questRecord[id] if questRecord[id]?
   syncQuestRecord()
-activateQuestRecord = (id) ->
+activateQuestRecord = (id, progress) ->
   if questRecord[id]?
     questRecord[id].active = true
-    return
-  questRecord[id] =
-    count: 0
-    required: 0
-    active: true
-  for k, v of questGoals[id]
-    continue if k == 'type'
-    questRecord[id][k] =
-      count: v.init
-      required: v.required
-      description: v.description
-    questRecord[id].count += v.init
-    questRecord[id].required += v.required
+  else
+    questRecord[id] =
+      count: 0
+      required: 0
+      active: true
+    for k, v of questGoals[id]
+      continue if k == 'type'
+      questRecord[id][k] =
+        count: v.init
+        required: v.required
+        description: v.description
+      questRecord[id].count += v.init
+      questRecord[id].required += v.required
+  # Only sync progress with game progress if the quest has only one goal.
+  if Object.keys(questGoals[id]).length == 2
+    progress = switch progress
+      when '达成'
+        1
+      when '80%'
+        0.8
+      when '50%'
+        0.5
+      else
+        0
+    for k, v of questGoals[id]
+      continue if k == 'type'
+      before = questRecord[id][k].count
+      questRecord[id][k].count = Math.max(questRecord[id][k].count, Math.ceil(questRecord[id][k].required * progress))
+      questRecord[id].count += questRecord[id][k].count - before
   syncQuestRecord()
 inactivateQuestRecord = (id) ->
   return unless questRecord[id]?
@@ -133,31 +160,37 @@ TaskPanel = React.createClass
     switch path
       when '/kcsapi/api_get_member/basic'
         memberId = window._nickNameId
-        questRecord = localStorage.getItem "quest_tracking_#{memberId}"
-        if questRecord?
-          questRecord = JSON.parse questRecord
-          if getCurrentDay() != questRecord.day
-            for id, q of questRecord
-              delete questRecord[id] if questGoals[id].type in [2, 4, 5]
-          if getCurrentDay() < questRecord.day
-            for id, q of questRecord
-              delete questRecord[id] if questGoals[id].type is 3
-        else
+        try
+          questRecord = CSON.parseCSONFile join(APPDATA_PATH, "quest_tracking_#{memberId}.cson")
+          if questRecord? and questRecord.time?
+            if isDifferentDay((new Date()).getTime(), questRecord.time)
+              for id, q of questRecord
+                continue unless questGoals[id]?
+                delete questRecord[id] if questGoals[id].type in [2, 4, 5]
+            if isDifferentWeek((new Date()).getTime(), questRecord.time)
+              for id, q of questRecord
+                continue unless questGoals[id]?
+                delete questRecord[id] if questGoals[id].type is 3
+            if isDifferentMonth((new Date()).getTime(), questRecord.time)
+              for id, q of questRecord
+                continue unless questGoals[id]?
+                delete questRecord[id] if questGoals[id].type is 6
+        catch err
           questRecord = {}
       when '/kcsapi/api_get_member/questlist'
         return unless body.api_list?
         for task in body.api_list
           continue if task is -1 || task.api_state < 2
           # Determine progress
-          progress = __ 'In progress'
+          progress = '进行'
           if task.api_state == 3
-            progress = __ 'Completed'
+            progress = '达成'
           else if task.api_progress_flag == 1
             progress = '50%'
           else if task.api_progress_flag == 2
             progress = '80%'
           # Determine customize progress
-          activateQuestRecord task.api_no if questGoals[task.api_no]?
+          activateQuestRecord task.api_no, progress if questGoals[task.api_no]?
           idx = _.findIndex tasks, (e) ->
             e.id == task.api_no
           # Do not exist currently
@@ -283,27 +316,37 @@ TaskPanel = React.createClass
       @setState
         tasks: tasks
   refreshDay: ->
-    curDay = getCurrentDay()
-    return if prevDay == curDay
+    return unless isDifferentDay((new Date()).getTime(), prevTime)
     {tasks} = @state
     for task, idx in tasks
       continue if task.id == 100000
       if task.type in [2, 4, 5]
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
-      if task.type is 3 and curDay is 1
+      if task.type is 3 and isDifferentWeek((new Date()).getTime(), prevTime)
         clearQuestRecord task.id
         tasks[idx] = Object.clone(emptyTask)
-      tasks = _.sortBy tasks, (e) -> e.id
-      @setState
+      if task.type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
+        clearQuestRecord task.id
+        tasks[idx] = Object.clone(emptyTask)
+    for id, q of questRecord
+      continue unless questGoals[id]?
+      if questGoals[id].type in [2, 4, 5]
+        clearQuestRecord id
+      if questGoals[id].type is 3 and isDifferentWeek((new Date()).getTime(), prevTime)
+        clearQuestRecord id
+      if questGoals[id].type is 6 and isDifferentMonth((new Date()).getTime(), prevTime)
+        clearQuestRecord id
+    tasks = _.sortBy tasks, (e) -> e.id
+    @setState
+      tasks: tasks
+    event = new CustomEvent 'task.change',
+      bubbles: true
+      cancelable: true
+      detail:
         tasks: tasks
-      event = new CustomEvent 'task.change',
-        bubbles: true
-        cancelable: true
-        detail:
-          tasks: tasks
-      window.dispatchEvent event
-    prevDay = curDay
+    window.dispatchEvent event
+    prevTime = (new Date()).getTime()
   handleTaskInfo: (e) ->
     {tasks} = e.detail
     @setState

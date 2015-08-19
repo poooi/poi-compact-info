@@ -109,18 +109,31 @@ getBackdropStyle = ->
 
 getTyku = (deck) ->
   {$ships, $slotitems, _ships, _slotitems} = window
-  totalTyku = 0
+  basicTyku = alvTyku = totalTyku = 0
   for shipId in deck.api_ship
     continue if shipId == -1
     ship = _ships[shipId]
     for itemId, slotId in ship.api_slot
       continue if itemId == -1
       item = _slotitems[itemId]
+      # Basic tyku
       if item.api_type[3] in [6, 7, 8]
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
+        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
       else if item.api_type[3] == 10 && item.api_type[2] == 11
-        totalTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
-  totalTyku
+        basicTyku += Math.floor(Math.sqrt(ship.api_onslot[slotId]) * item.api_tyku)
+      # Alv
+      if item.api_type[3] == 6 && item.api_alv > 0 && item.api_alv <= 7
+        alvTyku += [0, 1, 4, 6, 11, 16, 17, 25][item.api_alv]
+      else if item.api_type[3] in [7, 8] && item.api_alv == 7
+        alvTyku += 3
+      else if item.api_type[3] == 10 && item.api_type[2] == 11 && item.api_alv == 7
+        alvTyku += 9
+  totalTyku = basicTyku + alvTyku
+
+  basic: basicTyku
+  alv: alvTyku
+  total: totalTyku
+
 
 getDeckMessage = (deck) ->
   {$ships, $slotitems, _ships} = window
@@ -219,8 +232,8 @@ TopAlert = React.createClass
   render: ->
     <div style={display: "flex", justifyContent: "space-around"}>
       <span style={flex: "none"}>{__ "Total Lv."}{@messages.totalLv} </span>
-      <span style={flex: "none"}>{__ "Avg Lv."}{@messages.avgLv} </span>
-      <span style={flex: "none"}>{__ "Fighter Power: "}{@messages.tyku}</span>
+      <span style={flex: "none", marginLeft: "5px"}>{__ "Avg Lv."}{@messages.avgLv} </span>
+      <span style={flex: "none", marginLeft: "5px"}>{__ "Fighter Power: "}{@messages.tyku.total}</span>
     </div>
 
 PaneBody = React.createClass
