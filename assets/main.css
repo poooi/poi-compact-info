@@ -3,10 +3,8 @@
   min-width: 250px;
 }
 #MainView .nav {
-  max-height: 33px;
-  padding-left: 3px;
-  padding-right: 3px;
-  border-bottom: none;
+  margin-top: -6px;
+  margin-bottom: 5px;
 }
 #MainView .nav > li {
   overflow: inherit;

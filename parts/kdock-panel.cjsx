@@ -155,7 +155,7 @@ KdockPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel bsStyle="default" >
+    <div>
     {
       for i in [1..4]
         <OverlayTrigger key={i} placement='top' overlay={
@@ -219,6 +219,6 @@ KdockPanel = React.createClass
         }
         </OverlayTrigger>
     }
-    </Panel>
+    </div>
 
 module.exports = KdockPanel

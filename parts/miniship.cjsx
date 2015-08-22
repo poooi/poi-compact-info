@@ -16,7 +16,7 @@ getStyle = (state) ->
     # 3: Repairing
     # 4: In mission
     # 5: In map
-    return ['success', 'warning', 'danger', 'info', 'default', 'primary'][state]
+    return ['success', 'warning', 'danger', 'info', 'default', 'info'][state]
   else
     return 'default'
 
@@ -62,7 +62,7 @@ getMaterialStyle = (percent) ->
   else if percent <= 75
     'info'
   else if percent < 100
-    'primary'
+    'info'
   else
     'success'
 
@@ -232,7 +232,7 @@ TopAlert = React.createClass
   render: ->
     <div style={display: "flex", justifyContent: "space-around"}>
       <span style={flex: "none"}>{__ "Total Lv."}{@messages.totalLv} </span>
-      <span style={flex: "none", marginLeft: "5px"}>{__ "Avg Lv."}{@messages.avgLv} </span>
+      <span style={flex: "none", marginLeft: "5px"}>{__ "Avg. Lv."}{@messages.avgLv} </span>
       <span style={flex: "none", marginLeft: "5px"}>{__ "Fighter Power: "}{@messages.tyku.total}</span>
     </div>
 

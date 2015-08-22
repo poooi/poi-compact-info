@@ -45,7 +45,7 @@ module.exports =
                 </div>
               </div>
               <div style={display:"flex", flexFlow:"column nowrap", width:"50%"}>
-                <div className="combinedPanels" style={display:"flex", flexFlow:"column nowrap"}>
+                <Panel className="combinedPanels" style={display:"flex", flexFlow:"column nowrap"}>
                   <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
                    <TabPane eventKey={1} tab={__ 'Docking'}>
                      <div className={"panel-col ndock-panel "}style={flex: 1}>
@@ -58,7 +58,7 @@ module.exports =
                      </div>
                    </TabPane>
                   </TabbedArea>
-                </div>
+                </Panel>
                 <div className="panel-col mission-panel" ref="missionPanel" >
                   <MissionPanel />
                 </div>
@@ -84,7 +84,7 @@ module.exports =
                   </div>
                 </div>
                 <div style={display:"flex", flexFlow:"column nowrap", width:"50%"}>
-                  <div className="combinedPanels" style={display:"flex", flexFlow:"column nowrap"}>
+                  <Panel className="combinedPanels" style={display:"flex", flexFlow:"column nowrap"}>
                     <TabbedArea activeKey={@state.key} onSelect={@handleSelect}>
                      <TabPane eventKey={1} tab={__ 'Docking'}>
                        <div className={"panel-col ndock-panel "}style={flex: 1}>
@@ -97,7 +97,7 @@ module.exports =
                        </div>
                      </TabPane>
                     </TabbedArea>
-                  </div>
+                  </Panel>
                   <div className="panel-col mission-panel" ref="missionPanel" >
                     <MissionPanel />
                   </div>

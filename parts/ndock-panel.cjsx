@@ -105,7 +105,7 @@ NdockPanel = React.createClass
     window.removeEventListener 'game.response', @handleResponse
     clearInterval @updateCountdown, 1000
   render: ->
-    <Panel bsStyle="default" >
+    <div>
     {
       for i in [1..4]
         if @state.docks[i].countdown > 60
@@ -139,6 +139,6 @@ NdockPanel = React.createClass
             </Label>
           </div>
     }
-    </Panel>
+    </div>
 
 module.exports = NdockPanel
