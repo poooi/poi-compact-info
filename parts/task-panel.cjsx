@@ -46,7 +46,7 @@ getCategory = (api_category) ->
 
 getStyleByProgress = (progress) ->
   switch progress
-    when '进行'
+    when __ 'In progress'
       return 'warning'
     when '50%'
       return 'primary'
@@ -67,7 +67,7 @@ getStyleByPercent = (percent) ->
   return 'success'
 
 emptyTask =
-  name: '未接受'
+  name: __ 'Empty quest'
   id: 100000
   content: '...'
   progress: ''
@@ -107,7 +107,7 @@ activateQuestRecord = (id, progress) ->
   # Only sync progress with game progress if the quest has only one goal.
   if Object.keys(questGoals[id]).length == 2
     progress = switch progress
-      when '达成'
+      when __ 'Completed'
         1
       when '80%'
         0.8
@@ -182,9 +182,9 @@ TaskPanel = React.createClass
         for task in body.api_list
           continue if task is -1 || task.api_state < 2
           # Determine progress
-          progress = '进行'
+          progress = __ 'In progress'
           if task.api_state == 3
-            progress = '达成'
+            progress = __ 'Completed'
           else if task.api_progress_flag == 1
             progress = '50%'
           else if task.api_progress_flag == 2

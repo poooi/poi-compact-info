@@ -92,7 +92,7 @@ KdockPanel = React.createClass
           switch kdock.api_state
             when -1
               docks[id] =
-                name: '未解锁'
+                name: __ 'Locked'
                 material: []
                 completeTime: -1
                 countdown: -1

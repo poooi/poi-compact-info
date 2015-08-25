@@ -91,7 +91,7 @@ NdockPanel = React.createClass
       if docks[i].countdown > 0
         docks[i].countdown = Math.floor((docks[i].completeTime - new Date()) / 1000)
         if docks[i].countdown <= 60 && !notified[i]
-          notify "#{docks[i].name} #{__ "repair completed"}",
+          notify "#{docks[i].name} #{__ 'repair completed'}",
             type: 'repair'
             icon: join(ROOT, 'assets', 'img', 'operation', 'repair.png')
           notified[i] = true
@@ -114,7 +114,7 @@ NdockPanel = React.createClass
             <span className="ndockName">
               {@state.docks[i].name}
             </span>
-            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{__ "Finish by : "}</strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
+            <OverlayTrigger placement='left' overlay={<Tooltip><strong>{__ 'Finish by : '}</strong>{timeToString @state.docks[i].completeTime}</Tooltip>}>
               <Label className="ndockTimer" bsStyle="primary">
                 {resolveTime @state.docks[i].countdown}
               </Label>
